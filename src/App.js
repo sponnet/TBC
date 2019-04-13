@@ -4,6 +4,8 @@ import "./App.css";
 import Chart from "./Chart";
 import Input from "./Input";
 
+import { Line } from "react-chartjs-2";
+
 function App() {
   // Curve parameters
   const [k, setK] = useState(4);
@@ -51,6 +53,40 @@ function App() {
     ["Average Price (xDAI / token)", pAvg],
     ["Getting (Mil tokens)", dSAvg * 1e-6]
   ];
+
+  // reserve data
+  let dataset = [];
+  let labels = [];
+  for (let i = 0; i < timesR * R0; i += (timesR * R0) / 20) {
+    let dp = priceFofR(i);
+    dataset.push(dp);
+    labels.push(i);
+  }
+  let plot = {
+    labels: labels,
+    datasets: [
+      { label: "price", borderColor: "rgba(75,192,192,1)", data: dataset }
+    ]
+  };
+
+  // make supply data
+  let datasetSupply = [];
+  let labelsSupply = [];
+  for (
+    let i = 0;
+    i < timesR ** (1 / k) * S0;
+    i += (timesR ** (1 / k) * S0) / 20
+  ) {
+    let p = Math.floor(priceFofR(i));
+    datasetSupply.push(p);
+    labelsSupply.push(i);
+  }
+  let plotSupply = {
+    labels: labelsSupply,
+    dataset: [
+      { label: "price", borderColor: "rgba(75,12,12,1)", data: dataset }
+    ]
+  };
 
   return (
     <div className="App">
@@ -134,6 +170,8 @@ function App() {
 
           <div className="row m">
             <div className="col c">
+              <Line data={plot} />
+              
               <Chart
                 {...{
                   label: "Reserve (R) [Mil xDAI]",
@@ -151,6 +189,7 @@ function App() {
               />
             </div>
             <div className="col c">
+              <Line data={plot} />
               <Chart
                 {...{
                   label: "Supply (R) [Mil Tokens]",
