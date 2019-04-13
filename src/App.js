@@ -77,14 +77,14 @@ function App() {
     i < timesR ** (1 / k) * S0;
     i += (timesR ** (1 / k) * S0) / 20
   ) {
-    let p = Math.floor(priceFofR(i));
+    let p = priceFofS(i);
     datasetSupply.push(p);
-    labelsSupply.push(i);
+    labelsSupply.push(Math.floor(i));
   }
   let plotSupply = {
     labels: labelsSupply,
-    dataset: [
-      { label: "price", borderColor: "rgba(75,12,12,1)", data: dataset }
+    datasets: [
+      { label: "price", borderColor: "rgba(75,12,12,1)", data: datasetSupply }
     ]
   };
 
@@ -189,7 +189,7 @@ function App() {
               />
             </div>
             <div className="col c">
-              <Line data={plot} />
+              <Line data={plotSupply} />
               <Chart
                 {...{
                   label: "Supply (R) [Mil Tokens]",
